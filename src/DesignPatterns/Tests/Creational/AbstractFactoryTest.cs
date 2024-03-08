@@ -1,8 +1,9 @@
 // ReSharper disable JoinDeclarationAndInitializer
 
 using System.Drawing;
+using DesignPatterns.Creational;
 
-namespace DesignPatterns.Tests;
+namespace DesignPatterns.Tests.Creational;
 
 public class AbstractFactoryTest
 {

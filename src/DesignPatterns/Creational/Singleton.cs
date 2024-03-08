@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace DesignPatterns;
+namespace DesignPatterns.Creational;
 
 public class Configuration
 {

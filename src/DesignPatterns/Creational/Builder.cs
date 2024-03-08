@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace DesignPatterns;
+namespace DesignPatterns.Creational;
 
 public interface IProductBuilder
 {

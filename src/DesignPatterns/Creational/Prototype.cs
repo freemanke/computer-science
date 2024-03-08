@@ -1,4 +1,4 @@
-namespace DesignPatterns;
+namespace DesignPatterns.Creational;
 
 public interface ICloneable<out T>
 {

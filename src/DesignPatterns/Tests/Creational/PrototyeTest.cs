@@ -1,4 +1,6 @@
-namespace DesignPatterns.Tests;
+using DesignPatterns.Creational;
+
+namespace DesignPatterns.Tests.Creational;
 
 public class PrototyeTest
 {
