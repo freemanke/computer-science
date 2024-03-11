@@ -1,14 +1,12 @@
 using System.Diagnostics;
 using System.Text;
-using System.Text.Json;
-using NUnit.Framework.Internal;
 
 namespace DesignPatterns;
 
 public enum LogLevel
 {
     Debug = 1,
-    Info = 2,
+    Info = 2
 }
 
 public class LogFormatterOptions
@@ -64,19 +62,30 @@ public interface ILoggerFactory
     ILogger CreateLogger(string categoryName);
 }
 
-public class LoggerFactory : ILoggerFactory
+public abstract class LoggerFactory : ILoggerFactory
 {
-    public const string DefaultLoggerName = "Default";
-    public readonly Dictionary<string, ILogger> loggers = new();
-    public LogFormatterOptions FormatterOptions { get; }
-    private static readonly object sync = new();
+    protected const string DefaultLoggerName = "Default";
+    protected static readonly object sync = new();
+    protected readonly Dictionary<string, ILogger> loggers = new();
 
-    public LoggerFactory(LogFormatterOptions formatterOptions)
+    protected LoggerFactory(LogFormatterOptions formatterOptions)
     {
         FormatterOptions = formatterOptions;
     }
 
-    public ILogger CreateLogger(string categoryName)
+    protected LogFormatterOptions FormatterOptions { get; }
+
+    public abstract ILogger CreateLogger(string categoryName);
+}
+
+public class ConsoleLoggerFactory : LoggerFactory
+{
+    public ConsoleLoggerFactory(LogFormatterOptions formatterOptions)
+        : base(formatterOptions)
+    {
+    }
+
+    public override ILogger CreateLogger(string categoryName)
     {
         if (string.IsNullOrEmpty(categoryName)) categoryName = DefaultLoggerName;
         lock (sync)
@@ -95,7 +104,7 @@ public class LoggerFactory : ILoggerFactory
 public class ConsoleLogger : ILogger
 {
     private readonly LogFormatterOptions formatOptions;
-    
+
     public ConsoleLogger(string categoryName, LogFormatterOptions formatOptions)
     {
         CategoryName = categoryName;
@@ -103,8 +112,50 @@ public class ConsoleLogger : ILogger
     }
 
     public string CategoryName { get; }
+
     public void Log(LogLevel level, string category, LogEntry logEntry)
     {
         Console.WriteLine(logEntry.ToString(level, category, formatOptions));
+    }
+}
+
+public class DebugLoggerFactory : LoggerFactory
+{
+    public DebugLoggerFactory(LogFormatterOptions formatterOptions)
+        : base(formatterOptions)
+    {
+    }
+
+    public override ILogger CreateLogger(string categoryName)
+    {
+        if (string.IsNullOrEmpty(categoryName)) categoryName = DefaultLoggerName;
+        lock (sync)
+        {
+            if (!loggers.TryGetValue(categoryName, out var logger))
+            {
+                logger = new DebugLogger(categoryName, FormatterOptions);
+                loggers.Add(categoryName, logger);
+            }
+
+            return logger;
+        }
+    }
+}
+
+public class DebugLogger : ILogger
+{
+    private readonly LogFormatterOptions formatOptions;
+
+    public DebugLogger(string categoryName, LogFormatterOptions formatOptions)
+    {
+        CategoryName = categoryName;
+        this.formatOptions = formatOptions;
+    }
+
+    public string CategoryName { get; }
+
+    public void Log(LogLevel level, string category, LogEntry logEntry)
+    {
+        Debug.WriteLine(logEntry.ToString(level, category, formatOptions));
     }
 }
