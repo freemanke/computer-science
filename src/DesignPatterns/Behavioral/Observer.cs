@@ -25,17 +25,35 @@ public class Teacher : ISubscriber
     }
 }
 
-public class Publisher
+public interface IPublisher
+{
+    void AddSubscriber(ISubscriber subscriber);
+    void DeleteSubscriber(ISubscriber subscriber);
+    void Notify(string message);
+}
+
+public class Publisher: IPublisher
 {
     private readonly List<ISubscriber> _subscribers = [];
 
     public void AddSubscriber(ISubscriber subscriber)
     {
-        if (_subscribers.All(a=> a!= subscriber)) _subscribers.Add(subscriber);
+        if (_subscribers.All(a => a != subscriber))
+        {
+            _subscribers.Add(subscriber);
+            Console.WriteLine($"添加订阅者");
+        }
+    }
+
+    public void DeleteSubscriber(ISubscriber subscriber)
+    {
+        _subscribers.Remove(subscriber);
+        Console.WriteLine($"删除订阅者");
     }
 
     public void Notify(string message)
     {
+        Console.WriteLine($"发布通知消息：{message}");
         _subscribers.ForEach(a=>a.Update(message));
     }
     

@@ -16,5 +16,10 @@ public class ObserverTest
         publisher.AddSubscriber(studentBob);
         publisher.AddSubscriber(teacher);
         publisher.Notify("2024年9月1日开学通知");
+        
+        publisher.DeleteSubscriber(studentJim);
+        publisher.DeleteSubscriber(studentBob);
+        publisher.DeleteSubscriber(teacher);
+        publisher.Notify("2024年9月10日升旗通知");
     }
 }
