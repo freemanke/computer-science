@@ -1,18 +1,13 @@
 namespace DesignPatterns.Structural;
 
-public interface IYmlProcess
-{
-    void ProcessYml(string yml);
-}
-
 /// <summary>
 /// 老的不兼容对象
 /// </summary>
-public class YmlProcessor: IYmlProcess
+public class YmlProcessor
 {
     public void ProcessYml(string yml)
     {
-        Console.WriteLine("xml");
+        Console.WriteLine($"{nameof(YmlProcessor)} 处理 YML文档");
     }
 }
 
@@ -24,29 +19,29 @@ public interface IJsonProcess
 /// <summary>
 /// 新的对象封装老的对象
 /// </summary>
-public class JsonProcessor : IJsonProcess, IYmlProcess
+public class JsonProcessor : IJsonProcess
 {
-    private IYmlProcess _ymlProcessor;
+    private readonly YmlProcessor _ymlProcessor;
 
-    public JsonProcessor(IYmlProcess ymlProcessor)
+    public JsonProcessor(YmlProcessor ymlProcessor)
     {
         _ymlProcessor = ymlProcessor;
     }
-
-    public void ProcessYml(string yml)
-    {
-        var json = YmlToJson(yml);
-        ProcessJson(json);
-    }
-
+    
     public void ProcessJson(string json)
     {
-        Console.WriteLine(json);
+        Console.WriteLine($"{nameof(JsonProcessor)} 处理 JSON 文档");
+        var yml = JsonToYml(json);
+        _ymlProcessor.ProcessYml(yml);
+       
     }
 
-    private string YmlToJson(string yml)
+    private static string JsonToYml(string json)
     {
-        Console.WriteLine("将 YML 格式转换成 JSON 格式");
-        return "{\"name\": \"freeman\"}";
+        Console.WriteLine("将 JSON 格式文档转换成 YML 格式文档");
+        return """
+               name:
+                 freeman
+               """;
     }
 }
