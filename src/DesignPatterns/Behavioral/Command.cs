@@ -1,4 +1,4 @@
-namespace DesignPatterns.Tests.Behavioral;
+namespace DesignPatterns.Behavioral;
 
 public class Receiver
 {

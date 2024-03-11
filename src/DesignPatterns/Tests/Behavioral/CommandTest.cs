@@ -1,6 +1,6 @@
-using DesignPatterns.Tests.Behavioral;
+using DesignPatterns.Behavioral;
 
-namespace DesignPatterns.Behavioral;
+namespace DesignPatterns.Tests.Behavioral;
 
 public class CommandTest
 {
