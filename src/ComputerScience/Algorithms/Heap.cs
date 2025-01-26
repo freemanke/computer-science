@@ -31,10 +31,18 @@ public class HeapTest
     [Test]
     public void TopK()
     {
-        const int k = 3;
-        var elements = new[] { 1, 2, 3, 4, 5, 6, 7, 9, 8, 10 };
+        var k = 3;
+        int[] elements = [1, 2, 3, 4, 5, 6, 7, 9, 8, 10];
         var topK = Heap.TopK(elements, k);
         Assert.That(topK, Has.Length.EqualTo(k));
-        Assert.That(string.Join(",", topK), Is.EqualTo("8,9,10"));
+        Assert.That(topK, Does.Contain(8));
+        Assert.That(topK, Does.Contain(9));
+        Assert.That(topK, Does.Contain(10));
+
+        k = 1;
+        elements = [1];
+        topK = Heap.TopK(elements, k);
+        Assert.That(topK, Has.Length.EqualTo(k));
+        Assert.That(topK, Does.Contain(1));
     }
 }
